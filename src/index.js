@@ -1,6 +1,3 @@
-function printName() {
-  let name = 'Eli';
-  return name;
-}
+import Display from './modules/Display'
 
-console.log('Hello my name is ' + printName());
+document.addEventListener('DOMContentLoaded', Display.loadHomepage)
