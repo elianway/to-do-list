@@ -6,16 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/elimcflyy/to-do-list.git"
-  },
-  "author": "",
+  "author": "elianway",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/elimcflyy/to-do-list/issues"
-  },
-  "homepage": "https://github.com/elimcflyy/to-do-list#readme",
   "devDependencies": {
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2"

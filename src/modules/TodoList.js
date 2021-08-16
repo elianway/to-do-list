@@ -7,7 +7,7 @@ export default class TodoList {
     this.projects = []
     this.projects.push(new Project('Inbox'))
     this.projects.push(new Project('Today'))
-    this.projects.push(new Project('This Week'))
+    this.projects.push(new Project('This week'))
   }
 
   setProjects(projects) {
@@ -19,20 +19,24 @@ export default class TodoList {
   }
 
   getProject(projectName) {
-    return (this.projects.find((project) => project.getName() === projectName))
+    return this.projects.find((project) => project.getName() === projectName)
   }
 
   contains(projectName) {
-    return (this.projects.some((project) => project.getName() === projectName))
+    return this.projects.some((project) => project.getName() === projectName)
   }
 
-  addProject(projectName) {
-    if (this.projects.find((project) => project.name === projectName)) return
-    this.projects = this.projects.push(projectName)
+  addProject(newProject) {
+    if (this.projects.find((project) => project.name === newProject.name))
+      return
+    this.projects.push(newProject)
   }
 
   deleteProject(projectName) {
-    this.projects = this.projects.filter((project) => project.getName() !== projectName)
+    const projectToDelete = this.projects.find(
+      (project) => project.getName() === projectName
+    )
+    this.projects.splice(this.projects.indexOf(projectToDelete), 1)
   }
 
   updateTodayProject() {

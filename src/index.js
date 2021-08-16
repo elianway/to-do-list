@@ -1,3 +1,3 @@
-import Display from './modules/Display'
+import UI from './modules/UI'
 
-document.addEventListener('DOMContentLoaded', Display.loadHomepage)
+document.addEventListener('DOMContentLoaded', UI.loadHomepage)

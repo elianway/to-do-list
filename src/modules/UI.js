@@ -3,39 +3,40 @@ import Storage from './Storage'
 import Project from './Project'
 import Task from './Task'
 
-export default class Display {
-  //LOAD CONTENT
+export default class UI {
+  // LOADING CONTENT
 
   static loadHomepage() {
-    Display.loadProjects()
-    Display.loadProjectButtons()
-    Display.openProject('Inbox', document.getElementById('button-inbox-projects'))
-    document.addEventListener('keydown', Display.handleKeyboardInput)
+    UI.loadProjects()
+    UI.initProjectButtons()
+    UI.openProject('Inbox', document.getElementById('button-inbox-projects'))
+    document.addEventListener('keydown', UI.handleKeyboardInput)
   }
 
   static loadProjects() {
     Storage.getTodoList()
-    .getProjects()
-    .forEach((project) => {
-      if (
-        project.name !== 'Inbox' &&
-        project.name !== 'Today' &&
-        project.name !== 'This week'
-      ) {
-        Display.createProject(project.name)
-      }
-    })
-    Display.initAddProjectButtons()
+      .getProjects()
+      .forEach((project) => {
+        if (
+          project.name !== 'Inbox' &&
+          project.name !== 'Today' &&
+          project.name !== 'This week'
+        ) {
+          UI.createProject(project.name)
+        }
+      })
+
+    UI.initAddProjectButtons()
   }
 
   static loadTasks(projectName) {
     Storage.getTodoList()
-    .getProject(projectName)
-    .getTasks()
-    .forEach((task) => Display.createTask(task.name, task.dueDate))
+      .getProject(projectName)
+      .getTasks()
+      .forEach((task) => UI.createTask(task.name, task.dueDate))
 
     if (projectName !== 'Today' && projectName !== 'This week') {
-      Display.initAddTaskButtons()
+      UI.initAddTaskButtons()
     }
   }
 
@@ -70,14 +71,15 @@ export default class Display {
           </div>
         </div>`
     }
-    Display.loadTasks(projectName)
+
+    UI.loadTasks(projectName)
   }
 
-  //CREATE CONTENT
+  // CREATING CONTENT
 
   static createProject(name) {
     const userProjects = document.getElementById('projects-list')
-    userProjects.innerHTML += `
+    userProjects.innerHTML += ` 
       <button class="button-project" data-project-button>
         <div class="left-project-panel">
           <i class="fas fa-tasks"></i>
@@ -87,8 +89,8 @@ export default class Display {
           <i class="fas fa-times"></i>
         </div>
       </button>`
-    
-    Display.initProjectButtons()
+
+    UI.initProjectButtons()
   }
 
   static createTask(name, dueDate) {
@@ -96,7 +98,7 @@ export default class Display {
     tasksList.innerHTML += `
       <button class="button-task" data-task-button>
         <div class="left-task-panel">
-          <i class="fas fa-circle"></i>
+          <i class="far fa-circle"></i>
           <p class="task-content">${name}</p>
           <input type="text" class="input-task-name" data-input-task-name>
         </div>
@@ -106,14 +108,14 @@ export default class Display {
           <i class="fas fa-times"></i>
         </div>
       </button>`
-    
-    Display.initTaskButtons()
+
+    UI.initTaskButtons()
   }
 
   static clear() {
-    Display.clearProjectPreview()
-    Display.clearProjects()
-    Display.clearTasks()
+    UI.clearProjectPreview()
+    UI.clearProjects()
+    UI.clearTasks()
   }
 
   static clearProjectPreview() {
@@ -132,15 +134,15 @@ export default class Display {
   }
 
   static closeAllPopups() {
-    Display.closeAddProjectPopup()
+    UI.closeAddProjectPopup()
     if (document.getElementById('button-add-task')) {
-      Display.closeAddTaskPopup()
+      UI.closeAddTaskPopup()
     }
     if (
       document.getElementById('tasks-list') &&
       document.getElementById('tasks-list').innerHTML !== ''
     ) {
-      Display.closeAllInputs()
+      UI.closeAllInputs()
     }
   }
 
@@ -148,16 +150,16 @@ export default class Display {
     const taskButtons = document.querySelectorAll('[data-task-button]')
 
     taskButtons.forEach((button) => {
-      Display.closeRenameInput(button)
-      Display.closeSetDateInput(button)
+      UI.closeRenameInput(button)
+      UI.closeSetDateInput(button)
     })
   }
 
   static handleKeyboardInput(e) {
-    if (e.key === 'Escape') Display.closeAllPopups()
+    if (e.key === 'Escape') UI.closeAllPopups()
   }
 
-  //PROJECT ADD EVENT LISTENERS
+  // PROJECT ADD EVENT LISTENERS
 
   static initAddProjectButtons() {
     const addProjectButton = document.getElementById('button-add-project')
@@ -171,12 +173,12 @@ export default class Display {
       'input-add-project-popup'
     )
 
-    addProjectButton.addEventListener('click', Display.openAddProjectPopup)
-    addProjectPopupButton.addEventListener('click', Display.addProject)
-    cancelProjectPopupButton.addEventListener('click', Display.closeAddProjectPopup)
+    addProjectButton.addEventListener('click', UI.openAddProjectPopup)
+    addProjectPopupButton.addEventListener('click', UI.addProject)
+    cancelProjectPopupButton.addEventListener('click', UI.closeAddProjectPopup)
     addProjectPopupInput.addEventListener(
       'keypress',
-      Display.handleAddProjectPopupInput()
+      UI.handleAddProjectPopupInput
     )
   }
 
@@ -184,7 +186,7 @@ export default class Display {
     const addProjectPopup = document.getElementById('add-project-popup')
     const addProjectButton = document.getElementById('button-add-project')
 
-    Display.closeAllPopups()
+    UI.closeAllPopups()
     addProjectPopup.classList.add('active')
     addProjectButton.classList.add('active')
   }
@@ -208,26 +210,26 @@ export default class Display {
     const projectName = addProjectPopupInput.value
 
     if (projectName === '') {
-      alert("Project name must have value")
+      alert("Project name can't be empty")
       return
     }
 
     if (Storage.getTodoList().contains(projectName)) {
       addProjectPopupInput.value = ''
-      alert('Project already exists')
+      alert('Project names must be different')
       return
     }
 
     Storage.addProject(new Project(projectName))
-    Display.createProject(projectName)
-    Display.closeAddProjectPopup()
+    UI.createProject(projectName)
+    UI.closeAddProjectPopup()
   }
 
   static handleAddProjectPopupInput(e) {
-    if (e.key === 'Enter') Display.addProject()
+    if (e.key === 'Enter') UI.addProject()
   }
 
-  //PROJECT EVENT LISTENERS
+  // PROJECT EVENT LISTENERS
 
   static initProjectButtons() {
     const inboxProjectsButton = document.getElementById('button-inbox-projects')
@@ -236,38 +238,38 @@ export default class Display {
     const projectButtons = document.querySelectorAll('[data-project-button]')
     const openNavButton = document.getElementById('button-open-nav')
 
-    inboxProjectsButton.addEventListener('click', Display.openInboxTasks)
-    todayProjectsButton.addEventListener('click', Display.openTodayTasks)
-    weekProjectsButton.addEventListener('click', Display.openWeekTasks)
-    projectButtons.forEach((projectButton) => 
-      projectButton.addEventListener('click', Display.handleProjectButton)
+    inboxProjectsButton.addEventListener('click', UI.openInboxTasks)
+    todayProjectsButton.addEventListener('click', UI.openTodayTasks)
+    weekProjectsButton.addEventListener('click', UI.openWeekTasks)
+    projectButtons.forEach((projectButton) =>
+      projectButton.addEventListener('click', UI.handleProjectButton)
     )
-    openNavButton.addEventListener('click', Display.openNav)
+    openNavButton.addEventListener('click', UI.openNav)
   }
 
   static openInboxTasks() {
-    Display.openProject('Inbox', this)
+    UI.openProject('Inbox', this)
   }
 
   static openTodayTasks() {
     Storage.updateTodayProject()
-    Display.openProject('Today', this)
+    UI.openProject('Today', this)
   }
 
   static openWeekTasks() {
     Storage.updateWeekProject()
-    Display.openProject('This week', this)
+    UI.openProject('This week', this)
   }
 
   static handleProjectButton(e) {
     const projectName = this.children[0].children[1].textContent
 
     if (e.target.classList.contains('fa-times')) {
-      Display.deleteProject(projectName, this)
+      UI.deleteProject(projectName, this)
       return
     }
 
-    Display.openProject(projectName, this)
+    UI.openProject(projectName, this)
   }
 
   static openProject(projectName, projectButton) {
@@ -279,25 +281,25 @@ export default class Display {
 
     buttons.forEach((button) => button.classList.remove('active'))
     projectButton.classList.add('active')
-    Display.closeAddProjectPopup()
-    Display.loadProjectContent(projectName)
+    UI.closeAddProjectPopup()
+    UI.loadProjectContent(projectName)
   }
 
   static deleteProject(projectName, button) {
-    if (button.classList.contains('active')) Display.clearProjectPreview()
+    if (button.classList.contains('active')) UI.clearProjectPreview()
     Storage.deleteProject(projectName)
-    Display.clearProjects()
-    Display.loadProjects()
+    UI.clearProjects()
+    UI.loadProjects()
   }
 
   static openNav() {
     const nav = document.getElementById('nav')
 
-    Display.closeAllPopups()
+    UI.closeAllPopups()
     nav.classList.toggle('active')
   }
 
-  //ADD TASK EVENT LISTENERS
+  // ADD TASK EVENT LISTENERS
 
   static initAddTaskButtons() {
     const addTaskButton = document.getElementById('button-add-task')
@@ -307,17 +309,17 @@ export default class Display {
     )
     const addTaskPopupInput = document.getElementById('input-add-task-popup')
 
-    addTaskButton.addEventListener('click', Display.openAddTaskPopup)
-    addTaskPopupButton.addEventListener('click', Display.addTask)
-    cancelTaskPopupButton.addEventListener('click', Display.closeAddTaskPopup)
-    addTaskPopupInput.addEventListener('keypress', Display.handleAddTaskPopupInput)
+    addTaskButton.addEventListener('click', UI.openAddTaskPopup)
+    addTaskPopupButton.addEventListener('click', UI.addTask)
+    cancelTaskPopupButton.addEventListener('click', UI.closeAddTaskPopup)
+    addTaskPopupInput.addEventListener('keypress', UI.handleAddTaskPopupInput)
   }
 
   static openAddTaskPopup() {
     const addTaskPopup = document.getElementById('add-task-popup')
     const addTaskButton = document.getElementById('button-add-task')
 
-    Display.closeAllPopups()
+    UI.closeAllPopups()
     addTaskPopup.classList.add('active')
     addTaskButton.classList.add('active')
   }
@@ -336,9 +338,9 @@ export default class Display {
     const projectName = document.getElementById('project-name').textContent
     const addTaskPopupInput = document.getElementById('input-add-task-popup')
     const taskName = addTaskPopupInput.value
-    
+
     if (taskName === '') {
-      alert('Task name must have value')
+      alert("Task name can't be empty")
       return
     }
     if (Storage.getTodoList().getProject(projectName).contains(taskName)) {
@@ -348,47 +350,47 @@ export default class Display {
     }
 
     Storage.addTask(projectName, new Task(taskName))
-    Display.createTask(taskName, 'No date')
-    Display.closeAddTaskPopup()
+    UI.createTask(taskName, 'No date')
+    UI.closeAddTaskPopup()
   }
 
   static handleAddTaskPopupInput(e) {
-    if (e.key === 'Enter') Display.addTask()
+    if (e.key === 'Enter') UI.addTask()
   }
 
-  //TASK EVENT LISTENERS
+  // TASK EVENT LISTENERS
 
   static initTaskButtons() {
-    const tastButtons = document.querySelectorAll('[data-task-button]')
-    const taskNameInputs = document.querySelectorAll('[data-input-task-name]')
-    const dueDateInputs = document.querySelectorAll('[data-input-due-date]')
+    const taskButtons = document.querySelectorAll('[data-task-button]')
+    const taskNameInputs = document.querySelectorAll('[data-input-task-name')
+    const dueDateInputs = document.querySelectorAll('[data-input-due-date')
 
-    taskButtons.forEach((taskButton) => 
-      taskButton.addEventListener('click', Display.handleTaskButton)
+    taskButtons.forEach((taskButton) =>
+      taskButton.addEventListener('click', UI.handleTaskButton)
     )
     taskNameInputs.forEach((taskNameInput) =>
-      taskNameInput.addEventListener('keypress', Display.renameTask)
+      taskNameInput.addEventListener('keypress', UI.renameTask)
     )
-    dueDateInputs.forEach((dueDate) =>
-      dueDate.addEventListener('change', Display.setTaskDate)
+    dueDateInputs.forEach((dueDateInput) =>
+      dueDateInput.addEventListener('change', UI.setTaskDate)
     )
   }
 
   static handleTaskButton(e) {
     if (e.target.classList.contains('fa-circle')) {
-      Display.setTaskCompleted(this)
+      UI.setTaskCompleted(this)
       return
     }
     if (e.target.classList.contains('fa-times')) {
-      Display.deleteTask(this)
+      UI.deleteTask(this)
       return
     }
     if (e.target.classList.contains('task-content')) {
-      Display.openRenameInput(this)
+      UI.openRenameInput(this)
       return
     }
     if (e.target.classList.contains('due-date')) {
-      Display.openSetDateInput(this)
+      UI.openSetDateInput(this)
     }
   }
 
@@ -407,8 +409,8 @@ export default class Display {
     } else {
       Storage.deleteTask(projectName, taskName)
     }
-    Display.clearTasks()
-    Display.loadTasks(projectName)
+    UI.clearTasks()
+    UI.loadTasks(projectName)
   }
 
   static deleteTask(taskButton) {
@@ -420,8 +422,8 @@ export default class Display {
       Storage.deleteTask(mainProjectName, taskName)
     }
     Storage.deleteTask(projectName, taskName)
-    Display.clearTasks()
-    Display.loadTasks(projectName)
+    UI.clearTasks()
+    UI.loadTasks(projectName)
   }
 
   static openRenameInput(taskButton) {
@@ -434,7 +436,7 @@ export default class Display {
       ;[taskName] = taskName.split(' (')
     }
 
-    Display.closeAllPopups()
+    UI.closeAllPopups()
     taskNamePara.classList.add('active')
     taskNameInput.classList.add('active')
     taskNameInput.value = taskName
@@ -442,7 +444,7 @@ export default class Display {
 
   static closeRenameInput(taskButton) {
     const taskName = taskButton.children[0].children[1]
-    let taskNameInput = taskButton.children[0].children[2]
+    const taskNameInput = taskButton.children[0].children[2]
 
     taskName.classList.remove('active')
     taskNameInput.classList.remove('active')
@@ -450,13 +452,13 @@ export default class Display {
   }
 
   static renameTask(e) {
-    if (e.key === 'Enter') return
+    if (e.key !== 'Enter') return
 
     const projectName = document.getElementById('project-name').textContent
     const taskName = this.previousElementSibling.textContent
     const newTaskName = this.value
 
-    if (newTaskName = '') {
+    if (newTaskName === '') {
       alert("Task name can't be empty")
       return
     }
@@ -470,18 +472,25 @@ export default class Display {
     if (projectName === 'Today' || projectName === 'This week') {
       const mainProjectName = taskName.split('(')[1].split(')')[0]
       const mainTaskName = taskName.split(' ')[0]
+      Storage.renameTask(
+        projectName,
+        taskName,
+        `${newTaskName} (${mainProjectName})`
+      )
       Storage.renameTask(mainProjectName, mainTaskName, newTaskName)
+    } else {
+      Storage.renameTask(projectName, taskName, newTaskName)
     }
-    Display.clearTasks()
-    Display.loadTasks(projectName)
-    Display.closeRenameInput(this.parentNode.parentNode)
+    UI.clearTasks()
+    UI.loadTasks(projectName)
+    UI.closeRenameInput(this.parentNode.parentNode)
   }
 
   static openSetDateInput(taskButton) {
     const dueDate = taskButton.children[1].children[0]
     const dueDateInput = taskButton.children[1].children[1]
 
-    Display.closeAllPopups()
+    UI.closeAllPopups()
     dueDate.classList.add('active')
     dueDateInput.classList.add('active')
   }
@@ -513,8 +522,8 @@ export default class Display {
     } else {
       Storage.setTaskDate(projectName, taskName, newDueDate)
     }
-    Display.clearTasks()
-    Display.loadTasks(projectName)
-    Display.closeSetDateInput(taskButton)
+    UI.clearTasks()
+    UI.loadTasks(projectName)
+    UI.closeSetDateInput(taskButton)
   }
 }

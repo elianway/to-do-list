@@ -1,5 +1,5 @@
-export default class TodoItem {
-  constructor (name, dueDate = "No date") {
+export default class Task {
+  constructor(name, dueDate = 'No date') {
     this.name = name
     this.dueDate = dueDate
   }
@@ -12,8 +12,8 @@ export default class TodoItem {
     return this.name
   }
 
-  setDate(date) {
-    this.dueDate = date
+  setDate(dueDate) {
+    this.dueDate = dueDate
   }
 
   getDate() {
