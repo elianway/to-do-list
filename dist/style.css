@@ -61,8 +61,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    background-color: var(--primary-dark);
-    color: var(--primary-light);
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
   }
   
   .logo {
@@ -71,12 +71,8 @@
     justify-content: center;
   }
   
-  .fa-check-double {
-    font-size: 40px;
-  }
-  
   .page-name {
-    font-family: 'Yusei Magic', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 40px;
   }
   
@@ -192,23 +188,23 @@
   }
   
   .button-add-project-popup {
-    border: 1px solid #99dd99;
-    background-color: #aaffaa;
+    border: 1px solid #4ab34a;
+    background-color: #60e060;
     font-weight: bold;
   }
   
   .button-cancel-project-popup {
-    border: 1px solid #eeadad;
-    background-color: #ffbebe;
+    border: 1px solid #d14646;
+    background-color: #fc6a6a;
     font-weight: bold;
   }
   
   .button-add-project-popup:hover {
-    background-color: #a6f0a6;
+    background-color: #6aeb6a;
   }
   
   .button-cancel-project-popup:hover {
-    background-color: #f5b2b2;
+    background-color: #e76868;
   }
   
   .project-preview {
@@ -375,13 +371,13 @@
     gap: 10px;
     width: 100%;
     padding: 10px;
-    background-color: var(--primary-dark);
-    color: var(--primary-light);
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
     font-size: 18px;
   }
   
   .fa-github {
-    color: var(--primary-light);
+    color: var(--primary-dark);
     font-size: 22px;
     transition: transform 0.3s ease-in-out;
   }
